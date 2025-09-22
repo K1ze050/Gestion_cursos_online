@@ -149,4 +149,18 @@ class PlataformaCursos:
                 })
         
         return estudiantes_bajos
-
+    
+ # MÉTODOS PARA OBTENER INFORMACIÓN (útiles para el menú)
+    def obtener_usuarios_por_tipo(self, tipo):
+        """Obtiene todos los usuarios de un tipo específico"""
+        return [usuario for usuario in self._usuarios.values() if usuario.obtener_tipo().lower() == tipo.lower()]
+    
+    def obtener_todos_cursos(self):
+        """Obtiene todos los cursos registrados"""
+        return list(self._cursos.values())
+    
+    def obtener_evaluaciones_curso(self, curso_id):
+        """Obtiene todas las evaluaciones de un curso"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        return self._cursos[curso_id].evaluaciones
