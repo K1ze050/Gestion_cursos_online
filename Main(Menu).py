@@ -343,3 +343,72 @@ def consultar_informacion_interactivo(plataforma):
         
         else:
             print("Opción no válida. Intente nuevamente.")
+
+def generar_reportes_interactivo(plataforma):
+    """Interfaz interactiva para generar reportes"""
+    print("\n--- GENERAR REPORTES ---")
+    
+    # Listar cursos disponibles
+    cursos = plataforma.obtener_todos_cursos()
+    if not cursos:
+        print("No hay cursos registrados.")
+        return
+    
+    print("Cursos disponibles:")
+    for i, curso in enumerate(cursos, 1):
+        print(f"{i}. {curso.nombre} (ID: {curso.id})")
+    
+    try:
+        seleccion = int(input("Seleccione el número del curso: "))
+        if seleccion < 1 or seleccion > len(cursos):
+            print("Selección no válida")
+            return
+        
+        curso = cursos[seleccion - 1]
+        umbral = float(input("Umbral para promedios bajos (por defecto 60): ") or "60")
+        
+        reporte = plataforma.generar_reporte_promedios_bajos(curso.id, umbral)
+        
+        print(f"\n--- REPORTE DE ESTUDIANTES CON PROMEDIO BAJO EN {curso.nombre} ---")
+        if not reporte:
+            print(f"No hay estudiantes con promedio inferior a {umbral} en este curso.")
+        else:
+            for item in reporte:
+                print(f"{item['estudiante'].nombre}: {item['promedio']:.2f}%")
+    except ValueError:
+        print("Error: Debe ingresar valores válidos")
+    except Exception as e:
+        print(f"Error: {e}")
+
+# FUNCIÓN PRINCIPAL PARA EJECUTAR EL SISTEMA CON MENÚ
+def ejecutar_sistema_con_menu():
+    """Función principal que ejecuta el sistema con un menú interactivo"""
+    plataforma = PlataformaCursos()
+    
+    # Menú principal
+    while True:
+        mostrar_menu_principal()
+        opcion = input("Seleccione una opción: ").strip()
+        
+        if opcion == "1":
+            registrar_usuario_interactivo(plataforma)
+        elif opcion == "2":
+            crear_curso_interactivo(plataforma)
+        elif opcion == "3":
+            inscribir_estudiante_interactivo(plataforma)
+        elif opcion == "4":
+            crear_evaluacion_interactivo(plataforma)
+        elif opcion == "5":
+            registrar_calificacion_interactivo(plataforma)
+        elif opcion == "6":
+            consultar_informacion_interactivo(plataforma)
+        elif opcion == "7":
+            generar_reportes_interactivo(plataforma)
+        elif opcion == "8":
+            print("¡Gracias por usar la plataforma de gestión de cursos!")
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+# Punto de entrada del programa
+ejecutar_sistema_con_menu()
