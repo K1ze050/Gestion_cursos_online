@@ -14,7 +14,7 @@ class PlataformaCursos:
         self._proximo_id_usuario = 1
         self._proximo_id_curso = 1
         self._proximo_id_evaluacion = 1
-        
+
  # MÉTODOS PARA REGISTRAR USUARIOS
     def registrar_usuario(self, tipo, nombre, email):
         """Registra un nuevo usuario en el sistema"""
@@ -61,3 +61,92 @@ class PlataformaCursos:
         # Registrar el curso en el perfil del estudiante
         estudiante = self._usuarios[estudiante_id]
         estudiante.inscribir_curso(curso_id)
+        
+         # MÉTODOS PARA GESTIONAR EVALUACIONES
+    def crear_evaluacion(self, tipo, nombre, curso_id, puntaje_maximo, **kwargs):
+        """Crea una nueva evaluación para un curso"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        
+        # Crear evaluación según el tipo
+        if tipo.lower() == "examen":
+            tiempo_limite = kwargs.get('tiempo_limite', 60)
+            evaluacion = Examen(self._proximo_id_evaluacion, nombre, curso_id, puntaje_maximo, tiempo_limite)
+        elif tipo.lower() == "tarea":
+            fecha_entrega = kwargs.get('fecha_entrega', datetime.now())
+            evaluacion = Tarea(self._proximo_id_evaluacion, nombre, curso_id, puntaje_maximo, fecha_entrega)
+        else:
+            raise ValueError("Tipo de evaluación no válido")
+        
+        # Agregar evaluación al curso
+        self._cursos[curso_id].agregar_evaluacion(evaluacion)
+        self._proximo_id_evaluacion += 1
+        return evaluacion
+    
+    def registrar_calificacion(self, evaluacion_id, estudiante_id, calificacion, curso_id):
+        """Registra una calificación para una evaluación"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        
+        # Buscar la evaluación en el curso
+        evaluacion = None
+        for eval_obj in self._cursos[curso_id].evaluaciones:
+            if eval_obj.id == evaluacion_id:
+                evaluacion = eval_obj
+                break
+        
+        if not evaluacion:
+            raise ValueError("Evaluación no encontrada")
+        
+        # Registrar la calificación
+        evaluacion.registrar_calificacion(estudiante_id, calificacion)
+    
+    # MÉTODOS DE CONSULTA
+    def obtener_estudiantes_curso(self, curso_id):
+        """Obtiene la lista de estudiantes inscritos en un curso"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        
+        return [self._usuarios[est_id] for est_id in self._cursos[curso_id].estudiantes_inscritos]
+    
+    def obtener_promedio_estudiante(self, estudiante_id, curso_id):
+        """Calcula el promedio de un estudiante en un curso"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        
+        if estudiante_id not in self._usuarios or not isinstance(self._usuarios[estudiante_id], Estudiante):
+            raise ValueError("ID de estudiante no válido")
+        
+        curso = self._cursos[curso_id]
+        calificaciones = []
+        
+        # Recopilar todas las calificaciones del estudiante en este curso
+        for evaluacion in curso.evaluaciones:
+            calificacion = evaluacion.obtener_calificacion(estudiante_id)
+            if calificacion is not None:
+                calificaciones.append(calificacion)
+        
+        # Calcular promedio
+        if not calificaciones:
+            return 0
+        
+        return sum(calificaciones) / len(calificaciones)
+    
+    def generar_reporte_promedios_bajos(self, curso_id, umbral=60):
+        """Genera un reporte de estudiantes con promedio bajo en un curso"""
+        if curso_id not in self._cursos:
+            raise CursoInexistenteError(f"El curso con ID {curso_id} no existe")
+        
+        estudiantes_bajos = []
+        
+        for estudiante_id in self._cursos[curso_id].estudiantes_inscritos:
+            promedio = self.obtener_promedio_estudiante(estudiante_id, curso_id)
+            if promedio < umbral:
+                estudiante = self._usuarios[estudiante_id]
+                estudiantes_bajos.append({
+                    'estudiante': estudiante,
+                    'promedio': promedio
+                })
+        
+        return estudiantes_bajos
+
