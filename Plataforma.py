@@ -6,6 +6,9 @@ class PlataformaError(Exception):
     """Excepción base para errores de la plataforma"""
     pass
 
+class UsuarioYaRegistradoError(PlataformaError):
+    """Excepción para cuando un usuario ya está registrado"""
+    pass
 
 # CLASE PADRE PARA USUARIOS (APLICANDO HERENCIA)
 class Usuario(ABC):
