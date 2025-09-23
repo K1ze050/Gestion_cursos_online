@@ -90,6 +90,26 @@ class Curso:
         """Agrega una evaluación al curso"""
         self._evaluaciones.append(evaluacion)
 
+ # Propiedades para acceso controlado a los atributos
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def nombre(self):
+        return self._nombre
+    
+    @property
+    def instructor_id(self):
+        return self._instructor_id
+    
+    @property
+    def estudiantes_inscritos(self):
+        return list(self._estudiantes_inscritos)
+    
+    @property
+    def evaluaciones(self):
+        return self._evaluaciones
 
 class PlataformaCursos:
     """
