@@ -151,6 +151,21 @@ class Evaluacion(ABC):
     @property
     def calificaciones(self):
         return self._calificaciones.copy()
+    
+ # SUBCLASES DE EVALUACION (APLICANDO HERENCIA Y POLIMORFISMO)
+class Examen(Evaluacion):
+    def __init__(self, id_evaluacion, nombre, curso_id, puntaje_maximo, tiempo_limite):
+        super().__init__(id_evaluacion, nombre, curso_id, puntaje_maximo)
+        self._tiempo_limite = tiempo_limite  # en minutos
+    
+    def tipo_evaluacion(self):
+        return "Examen"
+    
+    @property
+    def tiempo_limite(self):
+        return self._tiempo_limite
+
+
 
 class PlataformaCursos:
     """
