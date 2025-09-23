@@ -111,6 +111,47 @@ class Curso:
     def evaluaciones(self):
         return self._evaluaciones
 
+# CLASE BASE PARA EVALUACIONES (APLICANDO POLIMORFISMO)
+class Evaluacion(ABC):
+    """
+    Clase abstracta base para evaluaciones.
+    Aplica el principio de polimorfismo de POO.
+    """
+    
+    def __init__(self, id_evaluacion, nombre, curso_id, puntaje_maximo):
+        self._id = id_evaluacion
+        self._nombre = nombre
+        self._curso_id = curso_id
+        self._puntaje_maximo = puntaje_maximo
+        self._calificaciones = {}  # Diccionario: {estudiante_id: calificación}
+    
+    @abstractmethod
+    def tipo_evaluacion(self):
+        """Método abstracto que debe implementarse en subclases"""
+        pass
+    
+    def registrar_calificacion(self, estudiante_id, calificacion):
+        """Registra una calificación para un estudiante"""
+        if calificacion < 0 or calificacion > self._puntaje_maximo:
+            raise ValueError("Calificación fuera de rango válido")
+        self._calificaciones[estudiante_id] = calificacion
+    
+    def obtener_calificacion(self, estudiante_id):
+        """Obtiene la calificación de un estudiante"""
+        return self._calificaciones.get(estudiante_id, None)
+    
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def nombre(self):
+        return self._nombre
+    
+    @property
+    def calificaciones(self):
+        return self._calificaciones.copy()
+
 class PlataformaCursos:
     """
     Clase principal que gestiona toda la plataforma.
