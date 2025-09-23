@@ -66,6 +66,29 @@ class Instructor(Usuario):
     def especialidad(self):
         return self._especialidad
 
+# CLASE PARA REPRESENTAR CURSOS
+class Curso:
+    """
+    Clase que representa un curso en la plataforma.
+    Aplica encapsulamiento con propiedades.
+    """
+    
+    def __init__(self, id_curso, nombre, instructor_id):
+        self._id = id_curso
+        self._nombre = nombre
+        self._instructor_id = instructor_id
+        self._estudiantes_inscritos = set()  # Usamos set para evitar duplicados
+        self._evaluaciones = []
+
+    def inscribir_estudiante(self, estudiante_id):
+        """Inscribe un estudiante en el curso"""
+        if estudiante_id in self._estudiantes_inscritos:
+            raise UsuarioYaRegistradoError(f"El estudiante {estudiante_id} ya está inscrito")
+        self._estudiantes_inscritos.add(estudiante_id)
+    
+    def agregar_evaluacion(self, evaluacion):
+        """Agrega una evaluación al curso"""
+        self._evaluaciones.append(evaluacion)
 
 
 class PlataformaCursos:
