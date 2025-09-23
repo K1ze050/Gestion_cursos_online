@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+# CLASE BASE PARA MANEJO DE EXCEPCIONES PERSONALIZADAS
+class PlataformaError(Exception):
+    """Excepción base para errores de la plataforma"""
+    pass
+
 
 # CLASE PADRE PARA USUARIOS (APLICANDO HERENCIA)
 class Usuario(ABC):
