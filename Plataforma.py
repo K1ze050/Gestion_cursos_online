@@ -165,7 +165,18 @@ class Examen(Evaluacion):
     def tiempo_limite(self):
         return self._tiempo_limite
 
-
+ # SUBCLASES DE TAREA (APLICANDO HERENCIA Y POLIMORFISMO)
+class Tarea(Evaluacion):
+    def __init__(self, id_evaluacion, nombre, curso_id, puntaje_maximo, fecha_entrega):
+        super().__init__(id_evaluacion, nombre, curso_id, puntaje_maximo)
+        self._fecha_entrega = fecha_entrega
+    
+    def tipo_evaluacion(self):
+        return "Tarea"
+    
+    @property
+    def fecha_entrega(self):
+        return self._fecha_entrega
 
 class PlataformaCursos:
     """
