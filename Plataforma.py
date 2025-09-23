@@ -1,6 +1,41 @@
-from entidades import Estudiante, Instructor, Curso, Examen, Tarea
-from excepciones import UsuarioYaRegistradoError, CursoInexistenteError
+from abc import ABC, abstractmethod
 from datetime import datetime
+
+
+# CLASE PADRE PARA USUARIOS (APLICANDO HERENCIA)
+class Usuario(ABC):
+    """
+    Clase abstracta que representa un usuario de la plataforma.
+    Aplica el principio de abstracción de POO.
+    """
+    
+    def __init__(self, id_usuario, nombre, email):
+        self._id = id_usuario  # Encapsulamiento: atributo protegido
+        self._nombre = nombre
+        self._email = email
+    
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def nombre(self):
+        return self._nombre
+    
+    @property
+    def email(self):
+        return self._email
+    
+    @abstractmethod
+    def obtener_tipo(self):
+        """Método abstracto que deben implementar las subclases"""
+        pass
+    
+    def __str__(self):
+        return f"{self.obtener_tipo()}: {self._nombre} ({self._email})"
+
+
+
 
 class PlataformaCursos:
     """
