@@ -34,6 +34,7 @@ class Usuario(ABC):
     def __str__(self):
         return f"{self.obtener_tipo()}: {self._nombre} ({self._email})"
 
+# Subclase de usuario (estudiante, aplicando herencia)
 class Estudiante(Usuario):
     def __init__(self, id_usuario, nombre, email):
         super().__init__(id_usuario, nombre, email)
@@ -50,6 +51,21 @@ class Estudiante(Usuario):
     @property
     def cursos_inscritos(self):
         return self._cursos_inscritos
+    
+
+# Subclase de usuario (instructor, aplicando herencia)
+class Instructor(Usuario):
+    def __init__(self, id_usuario, nombre, email):
+        super().__init__(id_usuario, nombre, email)
+        self._especialidad = "General"  # Especialidad por defecto
+    
+    def obtener_tipo(self):
+        return "Instructor"
+    
+    @property
+    def especialidad(self):
+        return self._especialidad
+
 
 
 class PlataformaCursos:
