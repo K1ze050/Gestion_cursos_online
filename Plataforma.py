@@ -10,6 +10,10 @@ class UsuarioYaRegistradoError(PlataformaError):
     """Excepción para cuando un usuario ya está registrado"""
     pass
 
+class CursoInexistenteError(PlataformaError):
+    """Excepción para cuando un curso no existe"""
+    pass
+
 # CLASE PADRE PARA USUARIOS (APLICANDO HERENCIA)
 class Usuario(ABC):
     """
