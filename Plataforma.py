@@ -34,7 +34,22 @@ class Usuario(ABC):
     def __str__(self):
         return f"{self.obtener_tipo()}: {self._nombre} ({self._email})"
 
-
+class Estudiante(Usuario):
+    def __init__(self, id_usuario, nombre, email):
+        super().__init__(id_usuario, nombre, email)
+        self._cursos_inscritos = []  # Lista de IDs de cursos
+    
+    def obtener_tipo(self):
+        return "Estudiante"
+    
+    def inscribir_curso(self, curso_id):
+        """Inscribe al estudiante en un curso"""
+        if curso_id not in self._cursos_inscritos:
+            self._cursos_inscritos.append(curso_id)
+    
+    @property
+    def cursos_inscritos(self):
+        return self._cursos_inscritos
 
 
 class PlataformaCursos:
